@@ -1,0 +1,25 @@
+apiVersion: v1
+data:
+  application.yml: |-
+    server:
+        port: 8080
+        servlet:
+            contextPath: /ktb/rest/poc2
+    #logging:
+     #   file: filebeatPOCService2.log
+    services:
+        externaluri: http://httpbin.org/headers
+        # externaluri: http://hello.poc.svc.cluster.local/headers
+        # externaluri: http://service-1.poc.svc.cluster.local:8080/ktb/rest/poc1/actuator/info
+    management:
+      server:
+        port: 8081
+      security:
+        enabled: false
+      endpoints:
+        web:
+          exposure:
+            include: health, metrics, info, prometheus
+kind: ConfigMap
+metadata:
+  name: config-2

@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: virtual-service-1
+spec:
+  hosts:
+  - "service-1.ktb.com"
+  gateways:
+    - my-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /ktb/rest/poc1
+    route:
+    - destination:
+        host: service-1.poc.svc.cluster.local
+        port:
+          number: 8080
+  - match:
+    - uri:
+        prefix: /ktb/rest/poc2
+    route:
+    - destination:
+        host: service-2.poc.svc.cluster.local
+        port:
+          number: 8080

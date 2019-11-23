@@ -1,0 +1,26 @@
+apiVersion: "authentication.istio.io/v1alpha1"
+kind: "Policy"
+metadata:
+  name: "require-mtls-jwt"
+spec:
+  targets:
+  - name: service-1
+  - name: service-2
+  peers:
+  - mtls: {}
+  origins:
+  - jwt:
+      issuer: http://34.87.119.98:8080/auth/realms/master
+      jwksUri: http://34.87.119.98:8080/auth/realms/master/protocol/openid-connect/certs
+      trigger_rules:
+      - excluded_paths:
+        - exact:  /ktb/rest/poc1/swagger-ui.html
+        - prefix: /ktb/rest/poc1/webjars
+        - prefix: /ktb/rest/poc1/swagger-resources
+        - prefix: /ktb/rest/poc1/v2/api-docs
+
+        - exact:  /ktb/rest/poc2/swagger-ui.html
+        - prefix: /ktb/rest/poc2/webjars
+        - prefix: /ktb/rest/poc2/swagger-resources
+        - prefix: /ktb/rest/poc2/v2/api-docs
+  principalBinding: USE_ORIGIN

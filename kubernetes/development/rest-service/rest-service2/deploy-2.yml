@@ -1,0 +1,67 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deploy-2
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: deploy-2
+        version: v1
+      annotations:
+        sidecar.istio.io/rewriteAppHTTPProbers: "true"
+    spec:
+      containers:
+        - name: log-sidecar
+          env:
+            - name: IMAGE_NAME
+              value: ktb-poc-rest-service2
+            - name: ENV
+              value: LOCAL
+            - name: ELASTIC_HOSTS
+              value: http://34.66.241.173:9200
+          image: docker.io/ibmlakisik/ktb:filebeat.v0.0.3
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: shared-data
+              mountPath: /var/logs/microservice
+        - name: deploy-2
+          image: docker.io/ibmlakisik/ktb:ktb-poc-rest-service2.v0.0.4
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: shared-data
+              mountPath: /var/logs/microservice
+            - name: logging-config
+              mountPath: /logback-spring.xml
+              subPath: logback-spring.xml
+            - name: application-config
+              mountPath: /application.yml
+              subPath: application.yml
+          ports:
+          - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/info
+              port: 8081
+            initialDelaySeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 30
+            timeoutSeconds: 15
+      volumes:
+        - name: application-config
+          configMap:
+            name: config-2
+        - name: logging-config
+          configMap:
+            name: logging-config
+        - name: shared-data
+          emptyDir: {}
+
+
+
+

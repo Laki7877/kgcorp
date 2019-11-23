@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty scope="context" name="application_name" source="spring.application.name"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+
+    <timestamp key="byDay" datePattern="yyyyMMdd'T'HHmmss"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <appender name="JSONFILE" class="ch.qos.logback.core.FileAppender">
+        <file>/var/logs/microservice/testjsonlog.json</file>
+        <!-- Use LogstashEncoder for logging String only message. -->
+        <!-- <encoder class="net.logstash.logback.encoder.LogstashEncoder"/> -->
+        <!-- Use LoggingEventCompositeJsonEncoder for logging JSON message as JSON object. See Composite Encoder/Layout on https://github.com/logstash/logstash-logback-encoder#pattern-json-provider -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <!-- provides the timestamp -->
+                <timestamp/>
+                <!-- provides the version -->
+                <version/>
+                <threadName/>
+                <loggerName/>
+                <logLevel/>
+                <mdc>
+                    <excludeMdcKeyName>Authorization</excludeMdcKeyName>
+                </mdc>
+                <pattern>
+                    <omitEmptyFields>true</omitEmptyFields>
+                    <!-- Use #tryJson to try converting JSON object. If source is not valid JSON object, it will be logged as string -->
+                    <pattern>
+                        {
+                        "message": "#tryJson{%message}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <append>true</append>
+    </appender>
+
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="JSONFILE" />
+    </root>
+
+
+</configuration>

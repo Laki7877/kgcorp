@@ -1,0 +1,37 @@
+apiVersion: v1
+data:
+  logback-spring.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<configuration>\r\n\r\n
+    \   <springProperty scope=\"context\" name=\"application_name\" source=\"spring.application.name\"/>\r\n\r\n
+    \   <include resource=\"org/springframework/boot/logging/logback/defaults.xml\"
+    />\r\n    <include resource=\"org/springframework/boot/logging/logback/file-appender.xml\"
+    />\r\n    <include resource=\"org/springframework/boot/logging/logback/console-appender.xml\"
+    />\r\n\r\n\r\n    <timestamp key=\"byDay\" datePattern=\"yyyyMMdd'T'HHmmss\"/>\r\n\r\n
+    \   <appender name=\"CONSOLE\" class=\"ch.qos.logback.core.ConsoleAppender\">\r\n
+    \       <encoder>\r\n            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level
+    %logger{36} - %msg%n</pattern>\r\n        </encoder>\r\n    </appender>\r\n\r\n
+    \   <appender name=\"jsonConsoleAppender\" class=\"ch.qos.logback.core.ConsoleAppender\">\r\n
+    \       <encoder class=\"net.logstash.logback.encoder.LogstashEncoder\"/>\r\n
+    \   </appender>\r\n\r\n    <appender name=\"JSONFILE\" class=\"ch.qos.logback.core.FileAppender\">\r\n
+    \       <file>/var/logs/microservice/testjsonlog.json</file>\r\n        <!-- Use
+    LogstashEncoder for logging String only message. -->\r\n        <!-- <encoder
+    class=\"net.logstash.logback.encoder.LogstashEncoder\"/> -->\r\n        <!-- Use
+    LoggingEventCompositeJsonEncoder for logging JSON message as JSON object. See
+    Composite Encoder/Layout on https://github.com/logstash/logstash-logback-encoder#pattern-json-provider
+    -->\r\n        <encoder class=\"net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder\">\r\n
+    \           <providers>\r\n                <!-- provides the timestamp -->\r\n
+    \               <timestamp/>\r\n                <!-- provides the version -->\r\n
+    \               <version/>\r\n                <threadName/>\r\n                <loggerName/>\r\n
+    \               <logLevel/>\r\n                <mdc/>\r\n                <pattern>\r\n
+    \                   <omitEmptyFields>true</omitEmptyFields>\r\n                    <!--
+    Use #tryJson to try converting JSON object. If source is not valid JSON object,
+    it will be logged as string -->\r\n                    <pattern>\r\n                        {\r\n
+    \                       \"message\": \"#tryJson{%message}\"\r\n                        }\r\n
+    \                   </pattern>\r\n                </pattern>\r\n            </providers>\r\n
+    \       </encoder>\r\n        <append>true</append>\r\n    </appender>\r\n\r\n\r\n
+    \   <root level=\"INFO\">\r\n        <appender-ref ref=\"CONSOLE\" />\r\n        <appender-ref
+    ref=\"FILE\" />\r\n        <appender-ref ref=\"JSONFILE\" />\r\n    </root>\r\n\r\n\r\n</configuration>"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: logging-config
+  selfLink: /api/v1/namespaces/poc/configmaps/logging-config

@@ -1,0 +1,9 @@
+server:
+    port: 8080
+    servlet:
+        contextPath: /ktb/rest/poc
+#logging:
+ #   file: filebeatPOCService2.log
+services:
+    #externaluri: https://jsonplaceholder.typicode.com/todos/1
+    externaluri: externalservice1.kb-poc-rest-service2:8080

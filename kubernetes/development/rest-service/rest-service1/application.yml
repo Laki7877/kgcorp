@@ -1,0 +1,30 @@
+server:
+    port: 8080
+    servlet:
+        contextPath: /ktb/rest/poc1
+#logging:
+    #file: /var/log/filebeatPOCService1.log
+    #file: filebeatPOCService1.log
+    #  files:
+    #      path: /var/log/
+    #     name: filebeatPOCService1.log
+    #    permissions: 0664
+
+services:
+    svc2uri:  http://service-2.poc.svc.cluster.local:8080/ktb/rest/poc2/svc2
+    svc2uri2: http://service-2.poc.svc.cluster.local:8080/ktb/rest/poc2/svc2
+    #svc2uri: http://ktb-poc-rest-service2.ktb-poc-rest-service:8080/ktb/rest/poc/svc2
+    #svc2uri2: http://ktb-poc-rest-service2.ktb-poc-rest-service2:8080/ktb/rest/poc/svc2
+
+secretdata:
+    secret1: ${SECRET_DATA_1:Kittima}
+    secret2: ${SECRET_DATA_2:email@gmail.com}
+management:
+    server:
+        port: 8081
+    security:
+        enabled: false
+    endpoints:
+        web:
+            exposure:
+                include: health, metrics, info, prometheus

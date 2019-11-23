@@ -1,0 +1,1 @@
+aws route53 create-hosted-zone --name kgcorp.tripspace.co --caller-reference 1

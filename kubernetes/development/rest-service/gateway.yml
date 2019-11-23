@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: my-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "service-1.ktb.com"
+    # - "service-2.ktb.com"
+    # tls:
+    #   httpsRedirect: true # sends 301 redirect for http requests
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "service-1.ktb.com"
+    # - "service-2.ktb.com"
+    tls:
+      mode: SIMPLE
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
