@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  nginx1:
+    build:
+      context: ./nginx1
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+  nginx2:
+    build:
+      context: ./nginx2
+      dockerfile: Dockerfile
+    ports:
+      - 8081:80
+  nginx3:
+    build:
+      context: ./nginx3
+      dockerfile: Dockerfile
+    ports:
+      - 8083:80
+

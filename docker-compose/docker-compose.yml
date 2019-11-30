@@ -15,7 +15,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - "8081:8080"
+      - "8082:8080"
     depends_on:
       - db
   keycloak:
@@ -55,54 +55,55 @@ services:
   #   restart: always
   #   ports:
   #     - "80:80"
-  # redis:
-  #   restart: always
-  #   image: redis:alpine3.10
-  #   volumes:
-  #     - ./redis/data:/data
-  #     - ./redis/config:/usr/local/etc/redis
-  # gitlab:
-  #   image: 'gitlab/gitlab-ce:12.4.2-ce.0'
-  #   restart: always
-  #   hostname: 'gitlab.example.com'
-  #   depends_on:
-  #     - redis
-  #     - db
-  #   environment:
-  #     GITLAB_OMNIBUS_CONFIG: |
-  #       postgresql['enable'] = false
-  #       gitlab_rails['db_username'] = "gitlab"
-  #       gitlab_rails['db_password'] = "P@ssw0rd"
-  #       gitlab_rails['db_host'] = "db"
-  #       gitlab_rails['db_port'] = "5432"
-  #       gitlab_rails['db_database'] = "gitlabhq_production"
-  #       gitlab_rails['db_adapter'] = 'postgresql'
-  #       gitlab_rails['db_encoding'] = 'utf8'
-  #       redis['enable'] = false
-  #       gitlab_rails['redis_host'] = 'redis'
-  #       gitlab_rails['redis_port'] = '6379'
-  #       external_url 'http://gitlab.example.com:8084'
-  #       gitlab_rails['gitlab_shell_ssh_port'] = 8085
-  #   ports:
-  #     - "8084:8084"
-  #     - "8085:22"
-  #   volumes:
-  #     - ./gitlab/config:/etc/gitlab:rw
-  #     - ./gitlab/logs:/var/log/gitlab:rw
-  #     - ./gitlab/data:/var/opt/gitlab:rw
-  # sonarqube:
-  #   image: sonarqube:7.9.1-community
-  #   restart: always
-  #   ports:
-  #     - "9000:9000"
-  #   environment:
-  #     - sonar.jdbc.username=sonarqube
-  #     - sonar.jdbc.password=P@ssw0rd
-  #     - sonar.jdbc.url=jdbc:postgresql://db:5432/sonar
-  #   volumes:
-  #     - ./sonar/config:/opt/sonarqube/conf
-  #     - ./sonar/data:/opt/sonarqube/data
-  #     - ./sonar/extensions:/opt/sonarqube/extensions
+  redis:
+    restart: always
+    image: redis:alpine3.10
+    volumes:
+      - ./redis/data:/data
+      - ./redis/config:/usr/local/etc/redis
+  gitlab:
+    image: 'gitlab/gitlab-ce:12.4.2-ce.0'
+    restart: always
+    hostname: 'gitlab'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        postgresql['enable'] = false
+        gitlab_rails['db_username'] = "gitlab"
+        gitlab_rails['db_password'] = "P@ssw0rd"
+        gitlab_rails['db_host'] = "db"
+        gitlab_rails['db_port'] = "5432"
+        gitlab_rails['db_database'] = "gitlabhq_production"
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_encoding'] = 'utf8'
+        redis['enable'] = false
+        gitlab_rails['redis_host'] = 'redis'
+        gitlab_rails['redis_port'] = '6379'
+        external_url 'http://gitlab:8084'
+        gitlab_rails['gitlab_shell_ssh_port'] = 8085
+        gitlab_rails['omniauth_enabled'] = true
+        gitlab_rails['omniauth_allow_single_sign_on'] = ['oauth2_generic']
+        gitlab_rails['omniauth_block_auto_created_users'] = false
+        gitlab_rails['omniauth_providers'] = [ { 'name' => 'oauth2_generic','label' => 'Login OAuth2', 'app_id' => 'gitlab', 'app_secret' => '3c69f677-d436-401d-988b-4f6e6244876d', 'args' => { client_options: { 'site' => 'http://keycloak:8080', 'authorize_url' => '/auth/realms/master/protocol/openid-connect/auth', 'user_info_url' => '/auth/realms/master/protocol/openid-connect/userinfo', 'token_url' => '/auth/realms/master/protocol/openid-connect/token' }, user_response_structure: { attributes: { email:'email', first_name:'given_name', last_name:'family_name', name:'name', nickname:'preferred_username' }, id_path: 'preferred_username' }, } } ]
+    ports:
+      - "8084:8084"
+      - "8085:22"
+    volumes:
+      - ./gitlab/config:/etc/gitlab:rw
+      - ./gitlab/logs:/var/log/gitlab:rw
+      - ./gitlab/data:/var/opt/gitlab:rw
+  sonarqube:
+    image: sonarqube:7.9.1-community
+    restart: always
+    ports:
+      - "9000:9000"
+    environment:
+      - sonar.jdbc.username=sonarqube
+      - sonar.jdbc.password=P@ssw0rd
+      - sonar.jdbc.url=jdbc:postgresql://db:5432/sonar
+    volumes:
+      - ./sonar/config:/opt/sonarqube/conf
+      - ./sonar/data:/opt/sonarqube/data
+      - ./sonar/extensions:/opt/sonarqube/extensions
   # nexus:
   #   image: sonatype/nexus3:3.19.1
   #   restart: always

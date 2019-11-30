@@ -1,27 +1,27 @@
 {
-    "Comment": "Create a subdomain NS record in the parent domain",
-    "Changes": [
-      {
-        "Action": "CREATE",
-        "ResourceRecordSet": {
-          "Name": "kub.tripspace.co",
-          "Type": "NS",
-          "TTL": 300,
-          "ResourceRecords": [
-            {
-              "Value": "ns-179.awsdns-22.com"
-            },
-            {
-              "Value": "ns-1447.awsdns-52.org"
-            },
-            {
-              "Value": "ns-534.awsdns-02.net"
-            },
-            {
-              "Value": "ns-1605.awsdns-08.co.uk"
-            }
-          ]
-        }
+  "Comment": "Create a subdomain NS record in the parent domain",
+  "Changes": [
+    {
+      "Action": "CREATE",
+      "ResourceRecordSet": {
+        "Name": "kub.trips2thailand.com",
+        "Type": "NS",
+        "TTL": 300,
+        "ResourceRecords": [
+          {
+            "Value": "ns-95.awsdns-11.com"
+          },
+          {
+            "Value": "ns-527.awsdns-01.net"
+          },
+          {
+            "Value": "ns-1444.awsdns-52.org"
+          },
+          {
+            "Value": "ns-2021.awsdns-60.co.uk"
+          }
+        ]
       }
-    ]
-  }
+    }
+  ]
+}

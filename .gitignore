@@ -1,0 +1,5 @@
+**/node_module/**
+**/data/**
+**/logs/**
+**/postgres-data/**
+**/extensions/**
